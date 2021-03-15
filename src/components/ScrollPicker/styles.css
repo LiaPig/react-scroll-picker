@@ -1,0 +1,48 @@
+.scroll-picker {
+  position: relative;
+  width: 100px;
+}
+
+.scroll-picker-mask1 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: calc(100% / 3);
+  margin: 0 auto;
+  width: 100%;
+  z-index: 3;
+  background: rgba(255, 255, 255, 0.5);
+  border-bottom: 1px solid #e9e9e9;
+  pointer-events: none;
+}
+.scroll-picker-mask2 {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: calc(100% / 3);
+  margin: 0 auto;
+  width: 100%;
+  z-index: 3;
+  background: rgba(255, 255, 255, 0.5);
+  border-top: 1px solid #e9e9e9;
+  pointer-events: none;
+}
+
+.scroll-picker-content {
+  display: flex;
+  flex: none;
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+  background-color: #fff;
+  flex-flow: column nowrap;
+}
+
+.scroll-picker-content-item {
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  scroll-snap-align: center;
+}
