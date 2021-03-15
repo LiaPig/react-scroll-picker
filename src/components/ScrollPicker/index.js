@@ -1,5 +1,6 @@
 
 import React, { useRef, useEffect, memo, useCallback } from "react";
+import { debounce } from '../../utils'
 
 import "./styles.css";
 
