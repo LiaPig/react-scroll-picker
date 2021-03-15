@@ -4,12 +4,12 @@ const debounce = (func, wait) => {
   return function (...args) {
     clearTimeout(timeoutId);
     // 开启新的一个定时器
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       func.apply(this, args);
     }, wait);
   };
 };
 
-export default {
+export {
   debounce,
 };
