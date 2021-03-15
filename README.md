@@ -4,7 +4,7 @@
 
 ## 预览
 
-[demo.gif](./demo.gif)
+![demo.gif](./demo.gif)
 
 ## 属性说明
 
