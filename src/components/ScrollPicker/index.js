@@ -3,41 +3,22 @@ import { debounce } from "../../utils/index";
 
 import "./styles.css";
 
+const isMobile = (() => {
+  const u = navigator.userAgent;
+  const isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+  const isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+  return isAndroid || isiOS;
+})();
+
 const ScrollPicker = memo(({ data = [], value, onChange, ...props }) => {
   const contentRef = useRef();
   const containerRef = useRef();
   // 单个选项元素的高度
   const itemHeight = useRef(50);
-  // 记录拖动开始的纵坐标
-  // const lastStartY = useRef(0);
-
-  // const handleTouchEnd = debounce(() => {
-  //   // 四舍五入知道当前 index
-  //   const index = Math.round(contentRef.current.scrollTop / itemHeight.current);
-  //   // 吸附居中
-  //   contentRef.current.scrollTop = index * itemHeight.current;
-  //   // 触发 onChange
-  //   if (onChange) {
-  //     onChange(data[index].value, data[index]);
-  //   }
-  // }, 50);
-
-  // const handleTouchStart = useCallback((e) => {
-  //   const touch = e.targetTouches[0];
-  //   lastStartY.current = touch.pageY;
-  // }, []);
-
-  // const handleTouchMove = useCallback((e) => {
-  //   const touch = e.targetTouches[0];
-  //   const distance = touch.pageY - lastStartY.current;
-  //   contentRef.current.scrollTop -= distance;
-  //   lastStartY.current = touch.pageY;
-  //   // 配合防抖在这里触发 touchEnd 事件
-  //   handleTouchEnd();
-  // }, []);
 
   const handleScroll = useCallback(
     debounce(async (e) => {
+      // 修复还在滚动但强行关闭了组件的情况
       if (!contentRef || !contentRef.current) {
         return;
       }
@@ -45,6 +26,18 @@ const ScrollPicker = memo(({ data = [], value, onChange, ...props }) => {
       const index = Math.round(
         contentRef.current.scrollTop / itemHeight.current
       );
+      // 判断滚动条位置有没变化
+      // 判断滚动条位置有没变化;
+      if (
+        contentRef.current.scrollTop === index * itemHeight.current &&
+        index !== 0 &&
+        index !== data.length - 1 &&
+        isMobile
+      ) {
+        return;
+      }
+      // console.log(contentRef.current.scrollTop, index * itemHeight.current);
+      // console.log(data[index].value);
       // 吸附居中
       contentRef.current.scrollTop = index * itemHeight.current;
       // 触发 onChange
@@ -78,8 +71,6 @@ const ScrollPicker = memo(({ data = [], value, onChange, ...props }) => {
       <div className="scroll-picker-mask2"></div>
       <div
         ref={contentRef}
-        // onTouchStart={handleTouchStart}
-        // onTouchMove={handleTouchMove}
         onScroll={handleScroll}
         className="scroll-picker-content"
       >
