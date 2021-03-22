@@ -6,6 +6,10 @@
 
 ![demo.gif](./demo.gif)
 
+## 在线 demo
+
+[codeSandbox](https://6vjcw.csb.app/)
+
 ## 属性说明
 
 ### data
@@ -32,3 +36,8 @@ const data = [
 ### onChange
 
 与 `value` 搭配使用，当选中的值发生改变会触发回调。 `function onChange: (value, item) => void ` 。
+
+
+## 其他
+
+由于 `onTouchStart` 和 `onTouchMove` 会和页面的下拉刷新等其他监听事件冲突，而引起某些低端手机的用户体验不友好，所以换成 `onScroll` 实现。
