@@ -9,32 +9,51 @@ const ScrollPicker = memo(({ data = [], value, onChange, ...props }) => {
   // 单个选项元素的高度
   const itemHeight = useRef(50);
   // 记录拖动开始的纵坐标
-  const lastStartY = useRef(0);
+  // const lastStartY = useRef(0);
 
-  const handleTouchEnd = debounce(() => {
-    // 四舍五入知道当前 index
-    const index = Math.round(contentRef.current.scrollTop / itemHeight.current);
-    // 吸附居中
-    contentRef.current.scrollTop = index * itemHeight.current;
-    // 触发 onChange
-    if (onChange) {
-      onChange(data[index].value, data[index]);
-    }
-  }, 50);
+  // const handleTouchEnd = debounce(() => {
+  //   // 四舍五入知道当前 index
+  //   const index = Math.round(contentRef.current.scrollTop / itemHeight.current);
+  //   // 吸附居中
+  //   contentRef.current.scrollTop = index * itemHeight.current;
+  //   // 触发 onChange
+  //   if (onChange) {
+  //     onChange(data[index].value, data[index]);
+  //   }
+  // }, 50);
 
-  const handleTouchStart = useCallback((e) => {
-    const touch = e.targetTouches[0];
-    lastStartY.current = touch.pageY;
-  }, []);
+  // const handleTouchStart = useCallback((e) => {
+  //   const touch = e.targetTouches[0];
+  //   lastStartY.current = touch.pageY;
+  // }, []);
 
-  const handleTouchMove = useCallback((e) => {
-    const touch = e.targetTouches[0];
-    const distance = touch.pageY - lastStartY.current;
-    contentRef.current.scrollTop -= distance;
-    lastStartY.current = touch.pageY;
-    // 配合防抖在这里触发 touchEnd 事件
-    handleTouchEnd();
-  }, []);
+  // const handleTouchMove = useCallback((e) => {
+  //   const touch = e.targetTouches[0];
+  //   const distance = touch.pageY - lastStartY.current;
+  //   contentRef.current.scrollTop -= distance;
+  //   lastStartY.current = touch.pageY;
+  //   // 配合防抖在这里触发 touchEnd 事件
+  //   handleTouchEnd();
+  // }, []);
+
+  const handleScroll = useCallback(
+    debounce(async (e) => {
+      if (!contentRef || !contentRef.current) {
+        return;
+      }
+      // 四舍五入知道当前 index
+      const index = Math.round(
+        contentRef.current.scrollTop / itemHeight.current
+      );
+      // 吸附居中
+      contentRef.current.scrollTop = index * itemHeight.current;
+      // 触发 onChange
+      if (onChange) {
+        onChange(data[index].value, data[index]);
+      }
+    }, 50),
+    [onChange, data]
+  );
 
   useEffect(() => {
     // 单个选项元素的高度 = 容器总高度 / （元素长度 + 前后空元素)
@@ -59,8 +78,9 @@ const ScrollPicker = memo(({ data = [], value, onChange, ...props }) => {
       <div className="scroll-picker-mask2"></div>
       <div
         ref={contentRef}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
+        // onTouchStart={handleTouchStart}
+        // onTouchMove={handleTouchMove}
+        onScroll={handleScroll}
         className="scroll-picker-content"
       >
         <div ref={containerRef}>
